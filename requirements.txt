@@ -11,3 +11,4 @@ python-dotenv
 WTForms
 pymysql
 gunicorn
+email_validator
