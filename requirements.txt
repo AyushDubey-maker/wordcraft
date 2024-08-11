@@ -9,4 +9,5 @@ Pillow
 Pillow
 python-dotenv
 WTForms
+pymysql
 gunicorn
