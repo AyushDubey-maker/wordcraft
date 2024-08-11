@@ -43,7 +43,7 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     image_file = db.Column(db.String(20), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    likes = db.relationship('Likes', backref='post', lazy=True)
+    likes = db.relationship('Likes', backref='post', lazy=True, cascade="all, delete-orphan")
     likes_count = db.Column(db.Integer, nullable=False, default=0)
     dislikes_count = db.Column(db.Integer, nullable=False, default=0)
 
