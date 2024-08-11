@@ -87,18 +87,33 @@ def update_post(post_id):
     post = Post.query.get_or_404(post_id)
     if post.author != current_user:
         abort(403)
+    
     form = PostForm()
+    
     if form.validate_on_submit():
+        # Update the title and content
         post.title = form.title.data
         post.content = form.content.data
+        
+        # Update the image if a new one is provided
+        if form.image.data:
+            picture_file = save_picture(form.image.data)
+            post.image_file = picture_file
+        
+        # Commit the changes to the database
         db.session.commit()
         flash('Your post has been updated!', 'success')
         return redirect(url_for('posts.post', post_id=post.id))
+    
     elif request.method == 'GET':
+        # Pre-fill the form with the current post data
         form.title.data = post.title
         form.content.data = post.content
+    
     return render_template('create_post.html', title='Update Post',
                            form=form, legend='Update Post')
+
+
 
 
 @posts.route("/post/<int:post_id>/delete", methods=['POST'])
@@ -112,56 +127,3 @@ def delete_post(post_id):
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('main.home'))
 
-# # Like Dislike Functionality
-
-# @posts.route("/post/like/<int:post_id>/<action>", methods=['POST'])
-# @login_required
-# def like_post(post_id, action):
-#     post = Post.query.get_or_404(post_id)
-    
-#     if action == 'like':
-#         existing_like = Likes.query.filter_by(user_id=current_user.id, post_id=post_id, is_like=True).first()
-#         if existing_like:
-#             db.session.delete(existing_like)
-#             post.likes_count -= 1
-#         else:
-#             existing_dislike = Likes.query.filter_by(user_id=current_user.id, post_id=post_id, is_like=False).first()
-#             if existing_dislike:
-#                 db.session.delete(existing_dislike)
-#                 post.dislikes_count -= 1
-#             new_like = Likes(user_id=current_user.id, post_id=post_id, is_like=True)
-#             db.session.add(new_like)
-#             post.likes_count += 1
-            
-#     elif action == 'dislike':
-#         existing_dislike = Likes.query.filter_by(user_id=current_user.id, post_id=post_id, is_like=False).first()
-#         if existing_dislike:
-#             db.session.delete(existing_dislike)
-#             post.dislikes_count -= 1
-#         else:
-#             existing_like = Likes.query.filter_by(user_id=current_user.id, post_id=post_id, is_like=True).first()
-#             if existing_like:
-#                 db.session.delete(existing_like)
-#                 post.likes_count -= 1
-#             new_dislike = Likes(user_id=current_user.id, post_id=post_id, is_like=False)
-#             db.session.add(new_dislike)
-#             post.dislikes_count += 1
-    
-#     db.session.commit()
-    
-#     return jsonify({
-#         'like_count': post.likes_count,
-#         'dislike_count': post.dislikes_count
-#     })
-
-# @posts.route("/user_liked/<int:post_id>")
-# @login_required
-# def user_liked(post_id):
-#     liked = Likes.query.filter_by(user_id=current_user.id, post_id=post_id, is_like=True).first() is not None
-#     return jsonify({'liked': liked})
-
-# @posts.route("/user_disliked/<int:post_id>")
-# @login_required
-# def user_disliked(post_id):
-#     disliked = Likes.query.filter_by(user_id=current_user.id, post_id=post_id, is_like=False).first() is not None
-#     return jsonify({'disliked': disliked})
