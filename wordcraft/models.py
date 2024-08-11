@@ -1,7 +1,7 @@
 from datetime import datetime
 from itsdangerous import TimedSerializer as Serializer
 from flask import current_app
-from flaskblog import db, login_manager
+from wordcraft import db, login_manager
 from flask_login import UserMixin
 
 

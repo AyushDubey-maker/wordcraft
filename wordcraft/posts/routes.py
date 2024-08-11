@@ -1,9 +1,9 @@
 # from flask import (render_template, url_for, flash,
 #                    redirect, request, abort, Blueprint)
 # from flask_login import current_user, login_required
-# from flaskblog import db
-# from flaskblog.models import Post
-# from flaskblog.posts.forms import PostForm
+# from wordcraft import db
+# from wordcraft.models import Post
+# from wordcraft.posts.forms import PostForm
 
 # posts = Blueprint('posts', __name__)
 
@@ -25,9 +25,9 @@ import secrets
 from flask import (render_template, url_for, flash, 
                    redirect, request, abort, Blueprint, current_app, jsonify)
 from flask_login import current_user, login_required
-from flaskblog import db
-from flaskblog.models import Post,Likes
-from flaskblog.posts.forms import PostForm
+from wordcraft import db
+from wordcraft.models import Post,Likes
+from wordcraft.posts.forms import PostForm
 from PIL import Image
 
 posts = Blueprint('posts', __name__)

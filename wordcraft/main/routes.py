@@ -1,7 +1,7 @@
 # from flask import render_template, request, Blueprint, jsonify
 # from flask_login import current_user, login_required
-# from flaskblog import db
-# from flaskblog.models import Post, Likes
+# from wordcraft import db
+# from wordcraft.models import Post, Likes
 
 
 
@@ -34,8 +34,8 @@
 
 from flask import render_template, request, Blueprint, jsonify, redirect, url_for
 from flask_login import current_user, login_required
-from flaskblog import db
-from flaskblog.models import Post, Likes
+from wordcraft import db
+from wordcraft.models import Post, Likes
 
 main = Blueprint('main', __name__)
 
