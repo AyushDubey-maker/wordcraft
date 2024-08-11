@@ -1,0 +1,45 @@
+<div class="sidebar-section">
+    <!-- Trending Post -->
+    <div class="trending-post">
+        <h5>Trending Post</h5>
+        {% if trending_post %}
+            <div class="post-item">
+                <a href="{{ url_for('posts.post', post_id=trending_post.id) }}">
+                    <div class="post-item-content">
+                        {% if trending_post.image_file %}
+                            <img class="post-thumbnail" src="{{ url_for('static', filename='post_images/' + trending_post.image_file) }}" alt="{{ trending_post.title }}">
+                        {% endif %}
+                        <div class="post-text">
+                            <h6>{{ trending_post.title }}</h6>
+                            <p>{{ trending_post.content[:50] | safe }}...</p>
+                            <small>by {{ trending_post.author.username }}</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% else %}
+            <p>No trending post available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Latest Posts -->
+    <div class="latest-posts">
+        <h5>Latest Posts</h5>
+        {% for post in latest_posts %}
+            <div class="post-item">
+                <a href="{{ url_for('posts.post', post_id=post.id) }}">
+                    <div class="post-item-content">
+                        {% if post.image_file %}
+                            <img class="post-thumbnail" src="{{ url_for('static', filename='post_images/' + post.image_file) }}" alt="{{ post.title }}">
+                        {% endif %}
+                        <div class="post-text">
+                            <h6>{{ post.title }}</h6>
+                            <p>{{ post.content[:50] | safe}}...</p>
+                            <small>by {{ post.author.username }}</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>

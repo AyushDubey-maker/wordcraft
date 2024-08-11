@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+    <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">{{ legend }}</legend>
+            
+            <!-- Title Field -->
+            <div class="form-group">
+                {{ form.title.label(class="form-control-label") }}
+                {% if form.title.errors %}
+                    {{ form.title(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.title.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.title(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            
+            <!-- Content Field -->
+            <div class="form-group">
+                {{ form.content.label(class="form-control-label") }}
+                {% if form.content.errors %}
+                    {{ form.content(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.content.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <textarea id="editor" name="content" class="form-control form-control-lg">{{ form.content.data }}</textarea>
+                {% endif %}
+            </div>
+            
+            <!-- Image Upload Field -->
+            <div class="form-group">
+                {{ form.image.label(class="form-control-label") }}
+                {% if form.image.errors %}
+                    {{ form.image(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.image.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.image(class="form-control form-control-lg", accept="image/jpeg, image/png") }}
+                {% endif %}
+            </div>
+            
+            <!-- Image Preview -->
+            <div class="form-group">
+                <img id="image-preview" style="max-width: 100%; display: none;">
+            </div>
+        </fieldset>
+        
+        <!-- Submit Button -->
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+</div>
+
+
+<!-- Include TinyMCE Script -->
+<script src="https://cdn.tiny.cloud/1/1kwpclmrab8fgbqwx9617s0rb7orpohraozec28hy1f6xm8q/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        tinymce.init({
+            selector: '#editor',
+            plugins: 'lists advlist', // Include only basic plugins
+            toolbar: 'undo redo | bold italic | bullist numlist', // Basic toolbar options
+            readonly: false, // Ensure editor is not read-only
+        });
+
+        // Image preview script
+        const imageInput = document.querySelector('#{{ form.image.id }}');
+        const imagePreview = document.querySelector('#image-preview');
+
+        imageInput.addEventListener('change', function(event) {
+            const files = event.target.files;
+            if (files && files.length) {
+                const file = files[0];
+
+                // Validate file type (allow only JPG and PNG)
+                const validTypes = ['image/jpeg', 'image/png'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Please upload a JPG or PNG image.');
+                    imageInput.value = ''; // Clear the input
+                    imagePreview.style.display = 'none';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+
+{% endblock content %}
